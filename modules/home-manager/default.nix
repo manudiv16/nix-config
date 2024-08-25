@@ -357,6 +357,14 @@
       background = "dark";
     };
   };
+  programs.wezterm = {
+    enable = true;
+    extraConfig = ''
+      return {
+        front_end = "WebGpu",
+      }
+    '';
+  };
   programs.gpg = {
     enable = true;
     package = pkgs.gnupg;
