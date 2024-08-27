@@ -12,7 +12,6 @@
     # Controls system level software and settings including fonts
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-
     # Tricked out nvim
     pwnvim.url = "github:zmre/pwnvim";
   };

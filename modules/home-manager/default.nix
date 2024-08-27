@@ -1,6 +1,7 @@
 {
   pkgs,
   pwnvim,
+  username,
   ...
 }: {
   home.stateVersion = "22.11";
@@ -15,6 +16,8 @@
     docker
     utm
     yazi
+    awscli2
+    granted
     pwnvim.packages."aarch64-darwin".default
   ];
   home.sessionVariables = {
@@ -25,14 +28,22 @@
   programs.bat.enable = true;
   programs.bat.config.theme = "TwoDark";
   programs.eza.enable = true;
-  programs.zsh.enable = true;
-  programs.zsh.enableCompletion = true;
-  programs.zsh.autosuggestion.enable = true;
-  programs.zsh.syntaxHighlighting.enable = true;
-  programs.zsh.shellAliases = {
-    ls = "ls --color=auto -F";
-    nixswitch = "darwin-rebuild switch --flake ~/.config/nix-darwin/.#";
-    nixup = "pushd ~/.config/nix-darwin; nix flake update; nixswitch; popd";
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+    shellAliases = {
+      ls = "ls --color=auto -F";
+      nixswitch = "darwin-rebuild switch --flake ~/.config/nix-darwin/.#";
+      nixup = "pushd ~/.config/nix-darwin; nix flake update; nixswitch; popd";
+    };
+    initExtra = ''
+    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+    '';
+    envExtra = ''
+    export GRANTED_ALIAS_CONFIGURED="true"
+    '';
   };
   programs.fzf = {
     enable = true;
@@ -47,7 +58,7 @@
     enableExtensionUpdateCheck = true;
     mutableExtensionsDir = true; # to allow vscode to install extensions not available via nix
 
-    extensions = with pkgs.vscode-extensions; [
+    extensions = (with pkgs.vscode-extensions; [
       bbenoist.nix
       scala-lang.scala
       svelte.svelte-vscode
@@ -82,8 +93,14 @@
       mhutchie.git-graph
       github.copilot
       github.copilot-chat # for copilot chat
-      gamunu.opentofu
-    ];
+    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+  {
+    name = "opentofu";
+    publisher = "gamunu";
+    version = "2.1.14";
+    sha256 = "sha256-OizdHTSGuwBRuD/qPXjmna6kZWfRp9EimhcFk3ICN9I=";
+  }
+  ];
     userSettings = {
       # Much of the following adapted from https://github.com/LunarVim/LunarVim/blob/4625145d0278d4a039e55c433af9916d93e7846a/utils/vscode_config/settings.json
       "editor.tabSize" = 2;
