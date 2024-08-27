@@ -365,6 +365,11 @@
       }
     '';
   };
+  programs.kitty = {
+    enable = true;
+    extraConfig = builtins.readFile ./configs/kitty.conf;
+    theme = "Gruvbox Material Dark Hard";
+  };
   programs.gpg = {
     enable = true;
     package = pkgs.gnupg;
