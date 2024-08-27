@@ -14,6 +14,7 @@
     colima
     docker
     utm
+    yazi
     pwnvim.packages."aarch64-darwin".default
   ];
   home.sessionVariables = {
@@ -81,6 +82,7 @@
       mhutchie.git-graph
       github.copilot
       github.copilot-chat # for copilot chat
+      gamunu.opentofu
     ];
     userSettings = {
       # Much of the following adapted from https://github.com/LunarVim/LunarVim/blob/4625145d0278d4a039e55c433af9916d93e7846a/utils/vscode_config/settings.json
@@ -273,11 +275,6 @@
       };
     };
   };
-  programs.alacritty = {
-    enable = true;
-    settings.font.normal.family = "MesloLGS Nerd Font Mono";
-    settings.font.size = 16;
-  };
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -356,14 +353,6 @@
       enable = true;
       background = "dark";
     };
-  };
-  programs.wezterm = {
-    enable = true;
-    extraConfig = ''
-      return {
-        front_end = "WebGpu",
-      }
-    '';
   };
   programs.kitty = {
     enable = true;
