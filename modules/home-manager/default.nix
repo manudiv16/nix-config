@@ -1,15 +1,11 @@
-{
-  pkgs,
-  pwnvim,
-  username,
-  ...
-}: {
+{ pkgs, pwnvim, ... }: {
   home.stateVersion = "22.11";
   home.packages = with pkgs; [
     ripgrep
     fd
     curl
     less
+    nil
     python312Packages.cfn-lint
     tenv
     colima
@@ -18,6 +14,7 @@
     yazi
     awscli2
     granted
+    direnv
     pwnvim.packages."aarch64-darwin".default
   ];
   home.sessionVariables = {
@@ -39,24 +36,27 @@
       nixup = "pushd ~/.config/nix-darwin; nix flake update; nixswitch; popd";
     };
     initExtra = ''
-    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
     '';
     envExtra = ''
-    export GRANTED_ALIAS_CONFIGURED="true"
+      export GRANTED_ALIAS_CONFIGURED="true"
     '';
   };
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    defaultCommand = "\fd --type f --hidden --exclude .git";
-    fileWidgetCommand = "\fd --exclude .git --type f"; # for when ctrl-t is pressed
-    changeDirWidgetCommand = "\fd --type d --hidden --follow --max-depth 3 --exclude .git";
+    defaultCommand = "fd --type f --hidden --exclude .git";
+    fileWidgetCommand =
+      "fd --exclude .git --type f"; # for when ctrl-t is pressed
+    changeDirWidgetCommand =
+      "fd --type d --hidden --follow --max-depth 3 --exclude .git";
   };
   programs.vscode = {
     enable = true;
     enableUpdateCheck = true;
     enableExtensionUpdateCheck = true;
-    mutableExtensionsDir = true; # to allow vscode to install extensions not available via nix
+    mutableExtensionsDir =
+      true; # to allow vscode to install extensions not available via nix
 
     extensions = (with pkgs.vscode-extensions; [
       bbenoist.nix
@@ -93,21 +93,20 @@
       mhutchie.git-graph
       github.copilot
       github.copilot-chat # for copilot chat
-    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-  {
-    name = "opentofu";
-    publisher = "gamunu";
-    version = "2.1.14";
-    sha256 = "sha256-OizdHTSGuwBRuD/qPXjmna6kZWfRp9EimhcFk3ICN9I=";
-  }
-  ];
+    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+      name = "opentofu";
+      publisher = "gamunu";
+      version = "2.1.14";
+      sha256 = "sha256-OizdHTSGuwBRuD/qPXjmna6kZWfRp9EimhcFk3ICN9I=";
+    }];
     userSettings = {
       # Much of the following adapted from https://github.com/LunarVim/LunarVim/blob/4625145d0278d4a039e55c433af9916d93e7846a/utils/vscode_config/settings.json
       "editor.tabSize" = 2;
       "editor.fontLigatures" = true;
       "editor.guides.indentation" = false;
       "editor.insertSpaces" = true;
-      "editor.fontFamily" = "'Hasklug Nerd Font', 'JetBrainsMono Nerd Font', 'FiraCode Nerd Font','SF Mono', Menlo, Monaco, 'Courier New', monospace";
+      "editor.fontFamily" =
+        "'Hasklug Nerd Font', 'JetBrainsMono Nerd Font', 'FiraCode Nerd Font','SF Mono', Menlo, Monaco, 'Courier New', monospace";
       "editor.fontSize" = 12;
       "editor.formatOnSave" = true;
       "editor.suggestSelection" = "first";
@@ -134,7 +133,7 @@
       "editor.accessibilitySupport" = "off";
       "oneDark.bold" = true;
       "window.zoomLevel" = 1;
-
+      "nix.enableLanguageServer" = true;
       "svelte.enable-ts-plugin" = true;
       "javascript.inlayHints.functionLikeReturnTypes.enabled" = true;
       "javascript.referencesCodeLens.enabled" = true;
@@ -170,7 +169,7 @@
               "entity.name.type.namespace"
               "keyword.other.important"
             ];
-            "settings" = {"fontStyle" = "bold";};
+            "settings" = { "fontStyle" = "bold"; };
           }
           {
             "name" = "One Dark italic";
@@ -185,7 +184,7 @@
               "variable.language.super"
               "variable.language.this"
             ];
-            "settings" = {"fontStyle" = "italic";};
+            "settings" = { "fontStyle" = "italic"; };
           }
           {
             "name" = "One Dark italic reset";
@@ -200,12 +199,12 @@
               "storage.type.java"
               "storage.type.primitive"
             ];
-            "settings" = {"fontStyle" = "";};
+            "settings" = { "fontStyle" = ""; };
           }
           {
             "name" = "One Dark bold italic";
-            "scope" = ["keyword.other.important"];
-            "settings" = {"fontStyle" = "bold italic";};
+            "scope" = [ "keyword.other.important" ];
+            "settings" = { "fontStyle" = "bold italic"; };
           }
         ];
       };
@@ -252,17 +251,20 @@
       git_status.style = "blue";
       git_metrics.disabled = false;
       git_branch.style = "bright-black";
-      git_branch.format = "[  ](bright-black)[$symbol$branch(:$remote_branch)]($style) ";
+      git_branch.format =
+        "[  ](bright-black)[$symbol$branch(:$remote_branch)]($style) ";
       time.disabled = true;
       directory = {
-        format = "[    ](bright-black)[$path]($style)[$read_only]($read_only_style)";
+        format =
+          "[    ](bright-black)[$path]($style)[$read_only]($read_only_style)";
         truncation_length = 4;
         truncation_symbol = "…/";
         style = "bold blue"; # cyan
         truncate_to_repo = false;
       };
       directory.substitutions = {
-        "Library/Containers/co.noteplan.NotePlan3/Data/Library/Application Support/co.noteplan.NotePlan3" = "Notes";
+        "Library/Containers/co.noteplan.NotePlan3/Data/Library/Application Support/co.noteplan.NotePlan3" =
+          "Notes";
       };
       package.disabled = true;
       package.format = "version [$version](bold green) ";
@@ -298,9 +300,9 @@
     userName = "Fran Martin";
     userEmail = "38869988+manudiv16@users.noreply.github.com";
     signing = {
-        key = "EBC89F78291E88AC61092B5D745196D8F5B4152F";
-        signByDefault = true;
-      };
+      key = "EBC89F78291E88AC61092B5D745196D8F5B4152F";
+      signByDefault = true;
+    };
     aliases = {
       gone = ''
         ! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == "[gone]" {print $1}' | xargs -r git branch -D'';
@@ -309,8 +311,10 @@
       br = "branch";
       st = "status -sb";
       wtf = "!git-wtf";
-      lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --topo-order --date=relative";
-      gl = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --topo-order --date=relative";
+      lg =
+        "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --topo-order --date=relative";
+      gl =
+        "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --topo-order --date=relative";
       lp = "log -p";
       lr = "reflog";
       ls = "ls-files";
@@ -330,31 +334,29 @@
       subpull = "submodule foreach git pull";
       subco = "submodule foreach git checkout master";
     };
-    extraConfig =
-      {
-        github.user = "manudiv16";
-        color.ui = true;
-        pull.rebase = true;
-        merge.conflictstyle = "diff3";
-        init.defaultBranch = "main";
-        http.sslVerify = true;
-        commit.verbose = true;
-        commit.gpgSign = true;
-        tag.gpgSign = true;
-        credential.helper =
-          if pkgs.stdenvNoCC.isDarwin
-          then "osxkeychain"
-          else "cache --timeout=10000000";
-        diff.algorithm = "patience";
-        protocol.version = "2";
-        core.commitGraph = true;
-        gc.writeCommitGraph = true;
-        push.autoSetupRemote = true;
-      }
-      // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-        core.fsmonitor = true;
-        core.untrackedcache = true;
-      };
+    extraConfig = {
+      github.user = "manudiv16";
+      color.ui = true;
+      pull.rebase = true;
+      merge.conflictstyle = "diff3";
+      init.defaultBranch = "main";
+      http.sslVerify = true;
+      commit.verbose = true;
+      commit.gpgSign = true;
+      tag.gpgSign = true;
+      credential.helper = if pkgs.stdenvNoCC.isDarwin then
+        "osxkeychain"
+      else
+        "cache --timeout=10000000";
+      diff.algorithm = "patience";
+      protocol.version = "2";
+      core.commitGraph = true;
+      gc.writeCommitGraph = true;
+      push.autoSetupRemote = true;
+    } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+      core.fsmonitor = true;
+      core.untrackedcache = true;
+    };
     # Really nice looking diffs
     delta = {
       enable = false;
