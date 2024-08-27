@@ -13,7 +13,6 @@
     utm
     yazi
     awscli2
-    granted
     direnv
     pwnvim.packages."aarch64-darwin".default
   ];
@@ -34,12 +33,10 @@
       ls = "ls --color=auto -F";
       nixswitch = "darwin-rebuild switch --flake ~/.config/nix-darwin/.#";
       nixup = "pushd ~/.config/nix-darwin; nix flake update; nixswitch; popd";
+      assume="source /opt/homebrew/bin/assume";
     };
     initExtra = ''
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-    '';
-    envExtra = ''
-      export GRANTED_ALIAS_CONFIGURED="true"
     '';
   };
   programs.fzf = {

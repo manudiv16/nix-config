@@ -40,7 +40,8 @@
       cleanup = "uninstall";
     };
     masApps = {};
-    brews = ["pinentry-mac"];
+    taps = ["common-fate/granted"];
+    brews = ["pinentry-mac" "granted"];
     casks = ["raycast" "tiles"];
   };
 }
