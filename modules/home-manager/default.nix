@@ -14,6 +14,7 @@
     yazi
     awscli2
     direnv
+    devbox
     pwnvim.packages."aarch64-darwin".default
   ];
   home.sessionVariables = {
