@@ -22,6 +22,8 @@
     NSGlobalDomain.AppleShowAllExtensions = true;
     NSGlobalDomain.InitialKeyRepeat = 14;
     NSGlobalDomain.KeyRepeat = 1;
+    NSGlobalDomain."com.apple.sound.beep.feedback" = 0;
+    NSGlobalDomain."com.apple.sound.beep.volume" = 0.0;
   };
   security.pam.enableSudoTouchIdAuth = true;
   users.users.franrubio.home = "/Users/franrubio";

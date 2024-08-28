@@ -15,6 +15,7 @@
     awscli2
     direnv
     devbox
+    k9s
     pwnvim.packages."aarch64-darwin".default
   ];
   home.sessionVariables = {
@@ -213,84 +214,198 @@
     enableZshIntegration = true;
     enableBashIntegration = true;
     settings = {
-      format = pkgs.lib.concatStrings [
-        "$os"
-        "$shell"
-        "$username"
-        "$hostname"
-        "$singularity"
-        "$kubernetes"
-        "$directory"
-        "$vcsh"
-        "$fossil_branch"
-        "$git_branch"
-        "$hg_branch"
-        "$pijul_channel"
-        "$sudo"
-        "$jobs"
-        "$line_break"
-        "$battery"
-        "$time"
-        "$status"
-        "$container"
-        "$character"
-      ];
-      character = {
-        success_symbol = "[❯](purple)";
-        error_symbol = "[❯](red)";
-        vicmd_symbol = "[❮](green)";
-      };
-      scan_timeout = 30;
-      add_newline = true;
-      gcloud.disabled = true;
-      aws.disabled = true;
-      os.disabled = false;
-      os.symbols.Macos = "";
-      git_status.style = "blue";
-      git_metrics.disabled = false;
-      git_branch.style = "bright-black";
-      git_branch.format =
-        "[  ](bright-black)[$symbol$branch(:$remote_branch)]($style) ";
-      time.disabled = true;
-      directory = {
-        format =
-          "[    ](bright-black)[$path]($style)[$read_only]($read_only_style)";
-        truncation_length = 4;
-        truncation_symbol = "…/";
-        style = "bold blue"; # cyan
-        truncate_to_repo = false;
-      };
-      directory.substitutions = {
-        "Library/Containers/co.noteplan.NotePlan3/Data/Library/Application Support/co.noteplan.NotePlan3" =
-          "Notes";
-      };
-      package.disabled = true;
-      package.format = "version [$version](bold green) ";
-      nix_shell.symbol = " ";
-      rust.symbol = " ";
-      shell = {
-        disabled = false;
-        format = "[$indicator]($style)";
-        style = "bright-black";
-        bash_indicator = " bsh";
-        nu_indicator = " nu";
-        fish_indicator = " ";
-        zsh_indicator = ""; # don't show when in my default shell type
-        unknown_indicator = " ?";
-        powershell_indicator = " _";
-      };
-      cmd_duration = {
-        format = "[$duration]($style)   ";
-        style = "bold yellow";
-        min_time_to_notify = 5000;
-      };
-      jobs = {
-        symbol = "";
-        style = "bold red";
-        number_threshold = 1;
-        format = "[$symbol]($style)";
+    format = pkgs.lib.concatStrings [
+      "[](color_orange)"
+      "$os"
+      "$username"
+      "[](bg:color_yellow fg:color_orange)"
+      "$directory"
+      "[](fg:color_yellow bg:color_aqua)"
+      "$git_branch"
+      "$git_status"
+      "[](fg:color_aqua bg:palette.color_blue)"
+      "$c"
+      "$rust"
+      "$golang"
+      "$nodejs"
+      "$php"
+      "$java"
+      "$kotlin"
+      "$haskell"
+      "$python"
+      "[](fg:color_blue bg:color_bg3)"
+      "$docker_context"
+      "$conda"
+      "[](fg:color_bg3 bg:color_bg1)"
+      "$time"
+      "[ ](fg:color_bg1)"
+      "$line_break$character"
+    ];
+
+    palette = "gruvbox_dark";
+
+    palettes = {
+      gruvbox_dark = {
+        color_fg0 = "#fbf1c7";
+        color_bg1 = "#3c3836";
+        color_bg3 = "#665c54";
+        color_blue = "#458588";
+        color_aqua = "#689d6a";
+        color_green = "#98971a";
+        color_orange = "#d65d0e";
+        color_purple = "#b16286";
+        color_red = "#cc241d";
+        color_yellow = "#d79921";
       };
     };
+
+    os = {
+      disabled = false;
+      style = "bg:color_orange fg:color_fg0";
+
+      symbols = {
+        Windows = "󰍲";
+        Ubuntu = "󰕈";
+        SUSE = "";
+        Raspbian = "󰐿";
+        Mint = "󰣭";
+        Macos = "󰀵";
+        Manjaro = "";
+        Linux = "󰌽";
+        Gentoo = "󰣨";
+        Fedora = "󰣛";
+        Alpine = "";
+        Amazon = "";
+        Android = "";
+        Arch = "󰣇";
+        Artix = "󰣇";
+        EndeavourOS = "";
+        CentOS = "";
+        Debian = "󰣚";
+        Redhat = "󱄛";
+        RedHatEnterprise = "󱄛";
+      };
+    };
+
+    username = {
+      show_always = true;
+      style_user = "bg:color_orange fg:color_fg0";
+      style_root = "bg:color_orange fg:color_fg0";
+      format = "[ $user ]($style)";
+    };
+
+    directory = {
+      style = "fg:color_fg0 bg:color_yellow";
+      format = "[ $path ]($style)";
+      truncation_length = 3;
+      truncation_symbol = "…/";
+      substitutions = {
+        Documents = "󰈙 ";
+        Downloads = " ";
+        Music = "󰝚 ";
+        Pictures = " ";
+        Developer = "󰲋 ";
+      };
+    };
+
+    git_branch = {
+      symbol = "";
+      style = "bg:color_aqua}";
+      format = "[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)";
+    };
+
+    git_status = {
+      style = "bg:color_aqua}";
+      format = "[[($all_status$ahead_behind )](fg:color_fg0 bg:color_aqua)]($style)";
+    };
+
+    nodejs = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    c = {
+      symbol = " ";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    rust = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    golang = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    php = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    java = {
+      symbol = " ";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    kotlin = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    haskell = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    python = {
+      symbol = "";
+      style = "bg:color_blue}";
+      format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)";
+    };
+
+    docker_context = {
+      symbol = "";
+      style = "bg:color_bg3}";
+      format = "[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)";
+    };
+
+    conda = {
+      style = "bg:color_bg3}";
+      format = "[[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)]($style)";
+    };
+
+    time = {
+      disabled = false;
+      time_format = "%R";
+      style = "bg:color_bg1}";
+      format = "[[  $time ](fg:color_fg0 bg:color_bg1)]($style)";
+    };
+
+    line_break = {
+      disabled = false;
+    };
+
+    character = {
+      disabled = false;
+      success_symbol = "[](bold fg:color_green})";
+      error_symbol = "[](bold fg:color_red})";
+      vimcmd_symbol = "[](bold fg:color_green})";
+      vimcmd_replace_one_symbol = "[](bold fg:color_purple})";
+      vimcmd_replace_symbol = "[](bold fg:color_purple})";
+      vimcmd_visual_symbol = "[](bold fg:color_yellow})";
+    };
+  };
+
   };
   programs.git = {
     enable = true;
@@ -355,6 +470,12 @@
       core.fsmonitor = true;
       core.untrackedcache = true;
     };
+    ignores = [
+      "*.DS_Store"
+      "*.swp"
+      "devbox.json"
+      "devbox.lock"
+    ];
     # Really nice looking diffs
     delta = {
       enable = false;
