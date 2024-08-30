@@ -12,43 +12,48 @@
     # Controls system level software and settings including fonts
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    # Tricked out nvim
-    pwnvim.url = "github:zmre/pwnvim";
+
+    # pwnvim.url = "github:zmre/pwnvim";
   };
-  outputs = inputs@{ nixpkgs, home-manager, darwin, pwnvim, systems, ... }:
-    let
-      forEachSystem = f:
-        nixpkgs.lib.genAttrs (import systems)
-        (system: f { pkgs = import nixpkgs { inherit system; }; });
-      mkHome = username: modules: {
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          backupFileExtension = "bak";
-          extraSpecialArgs = { inherit inputs pwnvim username; };
-          users."${username}".imports = modules;
-        };
-      };
-    in {
-      devShells = forEachSystem ({ pkgs }: {
-        default =
-          pkgs.mkShellNoCC { packages = with pkgs; [ opentofu gum nixfmt ]; };
-      });
-      darwinConfigurations = let username = "franrubio";
-      in {
-        K032-3 = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          pkgs = import nixpkgs {
-            system = "aarch64-darwin";
-            config.allowUnfree = true;
-          };
-          modules = [
-            ./modules/darwin
-            home-manager.darwinModules.home-manager
-            (mkHome username [ ./modules/home-manager ])
-          ];
-        };
+  outputs = inputs @ {
+    nixpkgs,
+    home-manager,
+    darwin,
+    systems,
+    ...
+  }: let
+    forEachSystem = f:
+      nixpkgs.lib.genAttrs (import systems)
+      (system: f {pkgs = import nixpkgs {inherit system;};});
+    mkHome = username: modules: {
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        backupFileExtension = "bak";
+        extraSpecialArgs = {inherit inputs username;};
+        users."${username}".imports = modules;
       };
     };
+  in {
+    devShells = forEachSystem ({pkgs}: {
+      default =
+        pkgs.mkShellNoCC {packages = with pkgs; [opentofu gum nixfmt];};
+    });
+    darwinConfigurations = let
+      username = "franrubio";
+    in {
+      K032-3 = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          config.allowUnfree = true;
+        };
+        modules = [
+          ./modules/darwin
+          home-manager.darwinModules.home-manager
+          (mkHome username [./modules/home-manager])
+        ];
+      };
+    };
+  };
 }
-
