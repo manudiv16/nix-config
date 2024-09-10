@@ -26,6 +26,8 @@
     fira-code-symbols
     docker-compose
     gh
+    pass
+    kubectl
   ];
   home.sessionVariables = {
     PAGER = "less";
@@ -45,6 +47,31 @@
       nixswitch = "darwin-rebuild switch --flake ~/.config/nix-darwin/.#";
       nixup = "pushd ~/.config/nix-darwin; nix flake update; nixswitch; popd";
       assume = "source /opt/homebrew/bin/assume";
+      gaa = "git add -A";
+      gc = "git commit";
+      gcm = "git commit -m";
+      gca = "git add -A && git commit --amend --no-edit";
+      gco = "git checkout";
+      gd = "git diff";
+      gds = "git diff --staged";
+      gs = "git status -sb";
+      gf = "git fetch --all -p";
+      gps = "git push";
+      gpsf = "git push --force";
+      gpsft = "git push --force --tags";
+      gpl = "git pull --rebase --autostash";
+      gsw = "git switch";
+      ".."= "cd ..";
+      "..." = "cd ../..";
+      ll = "ls -l";
+      la = "ls -la";
+      "~" = "cd ~";
+      "k" = "kill -9";
+      "p" = "ps aux | grep";
+      "c." = "code .";
+      "o." = "open .";
+
+
     };
     initExtra = ''
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -528,95 +555,47 @@
   };
   programs.neovim = {
     enable = true;
+    # package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+    defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-    vimdiffAlias = true;
+    extraLuaPackages = ps: [
+      ps.lua
+      ps.luarocks-nix
+      ps.magick
+    ];
+    extraPackages = with pkgs; [
+      imagemagick
 
-    extraLuaConfig = ''
-      vim.g.lsp_elixir_bin = "${pkgs.elixir_ls}/bin/elixir-ls"
-      vim.g.lsp_tsserver_bin = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server"
-      vim.g.lsp_tsserver_ts_path = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib"
+      # Language Servers
+      # https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+      erlang_26
+      elixir
+      elixir_ls
+      # inputs.next-ls
+      # vimPlugins.elixir-tools-nvim
+      lua-language-server
+      nil
+      nixd
+      nodePackages_latest.svelte-language-server
+      pyright
+      nodePackages."@tailwindcss/language-server"
 
-      ${builtins.readFile ../../configs/nvim/defaults.lua}
-      ${builtins.readFile ../../configs/nvim/base.lua}
-      ${builtins.readFile ../../configs/nvim/theme.lua}
-      ${builtins.readFile ../../configs/nvim/term.lua}
-      ${builtins.readFile ../../configs/nvim/git.lua}
-      ${builtins.readFile ../../configs/nvim/treesitter.lua}
-      ${builtins.readFile ../../configs/nvim/telescope.lua}
-      ${builtins.readFile ../../configs/nvim/lsp.lua}
-      ${builtins.readFile ../../configs/nvim/cmp.lua}
-    '';
+      # Formatters
+      # https://github.com/stevearc/conform.nvim?tab=readme-ov-file#formatters
+      black
+      nixfmt-rfc-style
+      nodePackages.prettier
+      biome
+      shfmt
+      stylelint
+      stylua
+    ];
+  };
 
-    plugins = with pkgs;
-      with pkgs.vimPlugins;
-      let
-        virt-column-nvim = vimUtils.buildVimPlugin {
-          name = "virt-column-nvim";
-          src = fetchFromGitHub {
-            owner = "lukas-reineke";
-            repo = "virt-column.nvim";
-            rev = "b62b4ef0774d19452d4ed18e473e824c7a756f2f";
-            hash = "sha256-7ljjJ7UwN2U1xPCtsYbrKdnz6SGQGbM/HrxPTxNKlwo=";
-          };
-        };
-      in
-      [
-        # Appearance
-
-        catppuccin-nvim
-        indent-blankline-nvim
-        nvim-web-devicons
-        virt-column-nvim
-
-        # Git
-
-        gitsigns-nvim
-        vim-fugitive
-        vim-rhubarb
-
-        # Programming
-
-        cmp-nvim-lsp
-        lsp-format-nvim
-        lspsaga-nvim
-        nvim-lspconfig
-        nvim-treesitter
-        nvim-treesitter-refactor
-        nvim-treesitter-textobjects # TODO: Review and update config
-        trouble-nvim
-
-        # Misc
-
-        barbar-nvim
-        cmp-buffer
-        emmet-vim
-        lualine-nvim
-        nerdcommenter # TODO: Review tcomment_vim
-        nvim-cmp
-        telescope-nvim
-        telescope-symbols-nvim
-        vim-easymotion
-        vim-startify
-        vim-vinegar
-        vim-vsnip
-        vim-vsnip
-        vim-vsnip-integ
-
-        # Dependencies
-
-        plenary-nvim
-        popup-nvim
-        YankRing-vim # TODO: Review
-        undotree # TODO: Review
-
-        #     # TODO: Review neoformat
-        #     # TODO: Review vim-table-mode
-        #     # TODO: Review vim-which-key (has catppuccino integration)
-        #     # TODO: Review - seneak.vim (has catppuccino integration)
-        #     # TODO: Review fern / nvimtree / luatree  (have catppuccino integration)
-      ];
-
+  home.file.".config/nvim" = {
+    source = ./nvim;
+    recursive = true;
   };
   home.file.".inputrc".source = ./dotfiles/inputrc;
 }

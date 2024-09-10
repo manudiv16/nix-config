@@ -44,6 +44,6 @@
     masApps = {};
     taps = ["common-fate/granted"];
     brews = ["pinentry-mac" "granted"];
-    casks = ["raycast" "tiles"];
+    casks = ["raycast" "tiles" "dbeaver-community"];
   };
 }
