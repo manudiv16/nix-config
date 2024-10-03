@@ -15,6 +15,7 @@ return {
         "python",
         "svelte",
         "typescript",
+        "gleam",
       },
     },
   },

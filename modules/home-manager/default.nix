@@ -1,7 +1,8 @@
 {
   pkgs,
   ...
-}: {
+}:
+{
   home.stateVersion = "22.11";
   home.packages = with pkgs; [
     silver-searcher
@@ -28,12 +29,15 @@
     gh
     pass
     kubectl
+    python312
+    python312Packages.pip
   ];
   home.sessionVariables = {
     PAGER = "less";
     CLICLOLOR = 1;
     EDITOR = "nvim";
   };
+  programs.zoxide.enable = true;
   programs.bat.enable = true;
   programs.bat.config.theme = "TwoDark";
   programs.eza.enable = true;
@@ -61,7 +65,7 @@
       gpsft = "git push --force --tags";
       gpl = "git pull --rebase --autostash";
       gsw = "git switch";
-      ".."= "cd ..";
+      ".." = "cd ..";
       "..." = "cd ../..";
       ll = "ls -l";
       la = "ls -la";
@@ -70,7 +74,6 @@
       "p" = "ps aux | grep";
       "c." = "code .";
       "o." = "open .";
-
 
     };
     initExtra = ''
@@ -88,8 +91,7 @@
     enable = true;
     enableUpdateCheck = true;
     enableExtensionUpdateCheck = true;
-    mutableExtensionsDir =
-      true; # to allow vscode to install extensions not available via nix
+    mutableExtensionsDir = true; # to allow vscode to install extensions not available via nix
 
     extensions =
       (with pkgs.vscode-extensions; [
@@ -205,7 +207,9 @@
               "entity.name.type.namespace"
               "keyword.other.important"
             ];
-            "settings" = {"fontStyle" = "bold";};
+            "settings" = {
+              "fontStyle" = "bold";
+            };
           }
           {
             "name" = "One Dark italic";
@@ -220,7 +224,9 @@
               "variable.language.super"
               "variable.language.this"
             ];
-            "settings" = {"fontStyle" = "italic";};
+            "settings" = {
+              "fontStyle" = "italic";
+            };
           }
           {
             "name" = "One Dark italic reset";
@@ -235,12 +241,16 @@
               "storage.type.java"
               "storage.type.primitive"
             ];
-            "settings" = {"fontStyle" = "";};
+            "settings" = {
+              "fontStyle" = "";
+            };
           }
           {
             "name" = "One Dark bold italic";
-            "scope" = ["keyword.other.important"];
-            "settings" = {"fontStyle" = "bold italic";};
+            "scope" = [ "keyword.other.important" ];
+            "settings" = {
+              "fontStyle" = "bold italic";
+            };
           }
         ];
       };
@@ -453,8 +463,7 @@
       signByDefault = true;
     };
     aliases = {
-      gone = ''
-        ! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == "[gone]" {print $1}' | xargs -r git branch -D'';
+      gone = ''! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == "[gone]" {print $1}' | xargs -r git branch -D'';
       tatus = "status";
       co = "checkout";
       br = "branch";
@@ -492,10 +501,7 @@
         commit.verbose = true;
         commit.gpgSign = true;
         tag.gpgSign = true;
-        credential.helper =
-          if pkgs.stdenvNoCC.isDarwin
-          then "osxkeychain"
-          else "cache --timeout=10000000";
+        credential.helper = if pkgs.stdenvNoCC.isDarwin then "osxkeychain" else "cache --timeout=10000000";
         diff.algorithm = "patience";
         protocol.version = "2";
         core.commitGraph = true;
@@ -572,6 +578,7 @@
       erlang_26
       elixir
       elixir_ls
+      gleam
       # inputs.next-ls
       # vimPlugins.elixir-tools-nvim
       lua-language-server

@@ -31,6 +31,7 @@ return {
       require("lspconfig").svelte.setup({})
       require("lspconfig").tailwindcss.setup({})
       require("lspconfig").biome.setup({})
+      require("lspconfig").gleam.setup({})
     end,
   },
 }

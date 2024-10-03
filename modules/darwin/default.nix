@@ -1,18 +1,22 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # here go the darwin preferences and config items
   programs.zsh.enable = true;
-  environment.shells = [pkgs.bash pkgs.zsh];
+  environment.shells = [
+    pkgs.bash
+    pkgs.zsh
+  ];
   environment.loginShell = pkgs.zsh;
-  environment.systemPackages = [pkgs.coreutils];
-  environment.systemPath = ["/opt/homebrew/bin"];
-  environment.pathsToLink = ["/Applications"];
+  environment.systemPackages = [ pkgs.coreutils ];
+  environment.systemPath = [ "/opt/homebrew/bin" ];
+  environment.pathsToLink = [ "/Applications" ];
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
   # test if this is still needed
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
-  fonts.packages = [(pkgs.nerdfonts.override {fonts = ["Meslo"];})];
+  fonts.packages = [ (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; }) ];
   services.nix-daemon.enable = true;
   system.defaults = {
     dock.autohide = true;
@@ -41,9 +45,19 @@
       upgrade = true;
       cleanup = "uninstall";
     };
-    masApps = {};
-    taps = ["common-fate/granted"];
-    brews = ["pinentry-mac" "granted"];
-    casks = ["raycast" "tiles" "dbeaver-community"];
+    masApps = { };
+    taps = [ "common-fate/granted" ];
+    brews = [
+      "pinentry-mac"
+      "granted"
+    ];
+    casks = [
+      "raycast"
+      "tiles"
+      "dbeaver-community"
+      "spotify"
+      "notunes"
+      "shottr"
+    ];
   };
 }
