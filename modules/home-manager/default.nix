@@ -31,6 +31,7 @@
     kubectl
     python312
     python312Packages.pip
+    nodejs_22
   ];
   home.sessionVariables = {
     PAGER = "less";
@@ -600,9 +601,5 @@
     ];
   };
 
-  home.file.".config/nvim" = {
-    source = ./nvim;
-    recursive = true;
-  };
   home.file.".inputrc".source = ./dotfiles/inputrc;
 }
