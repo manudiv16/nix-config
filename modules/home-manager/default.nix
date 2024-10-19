@@ -32,6 +32,9 @@
     python312
     python312Packages.pip
     nodejs_22
+    rebar3
+    gleam
+    erlang
   ];
   home.sessionVariables = {
     PAGER = "less";

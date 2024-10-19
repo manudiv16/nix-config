@@ -58,6 +58,7 @@
       "spotify"
       "notunes"
       "shottr"
+      "nikitabobko/tap/aerospace"
     ];
   };
 }
